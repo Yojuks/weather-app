@@ -1,17 +1,21 @@
-import React, { useState } from "react";
+import React from "react";
+import styles from "./Input.module.css";
 
-const Input = () => {
-  const [city, setCity] = useState("");
-
+const Input = ({ city, setCity }) => {
   const changeHandle = (event) => {
-    setCity(event.target.value);
-    console.log(city);
+    setCity(event.target.value.charAt(0).toUpperCase() + event.target.value.slice(1));
   };
 
   return (
-    <div>
-      <input type="text" value={city} onChange={(e) => changeHandle(e)} placeholder="enter city" />
-    </div>
+    <>
+      <input
+        className={styles.input}
+        type="text"
+        value={city}
+        onChange={(e) => changeHandle(e)}
+        placeholder="enter city"
+      />
+    </>
   );
 };
 

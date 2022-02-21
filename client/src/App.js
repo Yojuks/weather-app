@@ -1,18 +1,14 @@
 import "./App.css";
 import React, { useState, useCallback, useEffect, forseUpdate } from "react";
 import axios from "axios";
-
-// import { v1 as uuid } from "uuid";
-import { v1 } from "uuid";
+import Input from "./Components/Input/Input";
+import Weatherelements from "./Components/WeatherElements/WeatherElements";
+import "./App.css";
 
 function App() {
   const [city, setCity] = useState("");
   const [weatherItems, setWeatherItems] = useState([]);
   const [weather, setWeather] = useState("");
-
-  const changeHandle = (event) => {
-    setCity(event.target.value.charAt(0).toUpperCase() + event.target.value.slice(1));
-  };
 
   useEffect(() => {
     getData();
@@ -51,8 +47,7 @@ function App() {
     });
   };
 
-  const removeTodo = async (id) => {
-    console.log(id, "id");
+  const removeWeatherItem = async (id) => {
     try {
       await axios
         .delete(
@@ -72,46 +67,15 @@ function App() {
 
   return (
     <div className="App">
-      <h1 style={{ textAlign: "center" }}>The weather app</h1>
-      <div style={{ textAlign: "center" }}>
-        <input type="text" value={city} onChange={(e) => changeHandle(e)} />
-        <button onClick={addElement}>add</button>
+      <h1 className="Title">The weather app</h1>
+      <div className="InputAndButton">
+        <Input city={city} setCity={setCity} />
+        <button className="button" onClick={addElement}>
+          add
+        </button>
       </div>
 
-      {weatherItems &&
-        weatherItems.map((element) => {
-          return (
-            <div
-              key={element.id}
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                padding: "5px",
-                width: "300px",
-                backgroundColor: "grey",
-                margin: "0 auto",
-                border: "2px solid black",
-                marginBottom: "5px",
-                borderRadius: "10px",
-                marginTop: "5px",
-              }}
-            >
-              <img
-                src={`http://openweathermap.org/img/w/${element?.icon}.png`}
-                alt={`${element?.description}`}
-                style={{ width: "50px" }}
-              />
-              <div> {`${element?.city}`}</div>
-              <div> {`${element?.temperature}`}</div>
-              <div> {`${element?.description}`}</div>
-
-              <span onClick={() => removeTodo(element?._id)} style={{ color: "black" }}>
-                x
-              </span>
-            </div>
-          );
-        })}
+      <Weatherelements weatherItems={weatherItems} removeWeatherItem={removeWeatherItem} />
     </div>
   );
 }

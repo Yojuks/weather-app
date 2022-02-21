@@ -9,15 +9,12 @@ const getWeatherData = async (city) => {
       `http://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&appid=6d8309305eeab8655e9b0c4ed74f5b9e`
     )
     .then((response) => response.data);
-  // console.log(request, "request");
   return result;
 };
 
 router.post("/add", async (req, res) => {
   const { city } = req.body;
-
   let response = await getWeatherData(city);
-
   const weather = await Weather.find({ city: response.name });
 
   if (weather.length === 0) {
