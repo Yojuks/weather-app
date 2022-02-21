@@ -1,5 +1,5 @@
 import "./App.css";
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useCallback, useEffect, forseUpdate } from "react";
 import axios from "axios";
 
 // import { v1 as uuid } from "uuid";
@@ -11,43 +11,60 @@ function App() {
   const [weather, setWeather] = useState("");
 
   const changeHandle = (event) => {
-    setCity(event.target.value);
-    console.log(city);
+    setCity(event.target.value.charAt(0).toUpperCase() + event.target.value.slice(1));
   };
+
+  useEffect(() => {
+    getData();
+  }, []);
 
   const addElement = async () => {
     try {
-      if (city !== "") {
-        await fetch(
-          `http://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&appid=6d8309305eeab8655e9b0c4ed74f5b9e`
-        )
-          .then((response) => response.json())
-          .then((result) => {
-            setWeather(result);
-            setCity("");
-            setWeatherItems((prevState) => [
-              ...prevState,
-              {
-                name: result.name,
-                temp: result.main.temp,
-                feels_like: result.main.feels_like,
-                id: v1(),
-                icon: result.weather[0].icon,
-                description: result.weather[0].description,
-              },
-            ]);
-          });
-      }
+      await getData()
+        .then(() => weatherItems.find((element) => element.city === city))
+        .then((result) => {
+          if (result === undefined) {
+            axios
+              .post(
+                "/api/weather/add",
+                { city: city },
+                {
+                  headers: {
+                    "Content-type": "application/json",
+                  },
+                }
+              )
+              .then(() => getData());
+          }
+        });
+      setCity("");
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
-      await axios.post(
-        "/api/weather/add",
-        { weather: weather },
-        {
-          headers: {
-            "Content-type": "application/json",
-          },
-        }
-      );
+  const getData = async () => {
+    await axios.get("/api/weather/").then((result) => {
+      setWeather(result);
+      setCity("");
+      setWeatherItems((prevState) => [...result?.data]);
+    });
+  };
+
+  const removeTodo = async (id) => {
+    console.log(id, "id");
+    try {
+      await axios
+        .delete(
+          `/api/weather/delete/${id}`,
+          { id },
+          {
+            headers: {
+              "Content-type": "application/json",
+            },
+          }
+        )
+        .then(() => getData());
     } catch (error) {
       console.log(error);
     }
@@ -55,7 +72,6 @@ function App() {
 
   return (
     <div className="App">
-      {console.log(weather, "weather")}
       <h1 style={{ textAlign: "center" }}>The weather app</h1>
       <div style={{ textAlign: "center" }}>
         <input type="text" value={city} onChange={(e) => changeHandle(e)} />
@@ -82,14 +98,17 @@ function App() {
               }}
             >
               <img
-                src={`http://openweathermap.org/img/w/${element.icon}.png`}
-                alt={`${element.description}`}
+                src={`http://openweathermap.org/img/w/${element?.icon}.png`}
+                alt={`${element?.description}`}
                 style={{ width: "50px" }}
               />
-              <div> {`${element.name}`}</div>
-              <div> {`${element.temp}`}</div>
-              <div> {`${element.feels_like}`}</div>
-              <div> {`${element.description}`}</div>
+              <div> {`${element?.city}`}</div>
+              <div> {`${element?.temperature}`}</div>
+              <div> {`${element?.description}`}</div>
+
+              <span onClick={() => removeTodo(element?._id)} style={{ color: "black" }}>
+                x
+              </span>
             </div>
           );
         })}
