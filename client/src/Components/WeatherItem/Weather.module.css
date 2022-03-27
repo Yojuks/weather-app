@@ -3,8 +3,7 @@
   justify-content: space-between;
   align-items: center;
   padding: 5px;
-  width: 300px;
-  background-color: #d3d3d3;
+  background-color: #ffffff;
   margin: 0 auto;
   border: 2px solid black;
   margin-bottom: 5px;
@@ -18,4 +17,10 @@
   display: block;
   text-align: center;
   transform: scale(0.5);
+  margin-right: 10px;
+}
+
+.text_elements {
+  min-width: 100px;
+  text-align: center;
 }

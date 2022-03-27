@@ -12,15 +12,15 @@ const WeatherItem = ({ element, removeWeatherItem }) => {
         <div>
           <img
             src={`http://openweathermap.org/img/w/${element?.icon}.png`}
-            alt={`${element?.description}`}
+            alt={`${element.description}`}
             style={{ width: "50px" }}
           />
         </div>
 
-        <div>
-          <div> {`${element?.city}`}</div>
-          <div> {`${element?.temperature}`}</div>
-          <div> {`${element?.description}`}</div>
+        <div className={styles.text_elements}>
+          <div> {`${element.city}`} </div>
+          <div> {`${(+element.temperature).toFixed(1)}°C`} </div>
+          <div> {`${element.description}`} </div>
         </div>
         <div
           className={styles.deleteSymbol}
