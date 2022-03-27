@@ -25,17 +25,23 @@ router.post("/add", async (req, res) => {
       icon: response.weather[0].icon,
     });
     weatherApp.save();
-
     res.status(200).json(weatherApp);
   } else {
-    res.status(500).json({ message: "дание уже есть" });
+    res.status(500).json({ message: "Data is present" });
   }
 });
 
 router.get("/", async (req, res) => {
   try {
     const weather = await Weather.find();
-    res.json(weather);
+    // TODO If i get 304 status code i want to sent response and on frontend get message that data is pressent
+    // if (res.statusCode === 304) {
+    //   console.log("trueeeee");
+    // } else {
+    //   console.log(false);
+    // res.json({ message: "дані вже є" });
+    // }
+    res.status(200).json(weather);
   } catch (error) {
     console.log(error);
   }
