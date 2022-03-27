@@ -1,36 +1,31 @@
-import "./App.css";
-import React, { useState, useCallback, useEffect, forseUpdate } from "react";
+import React, { useState, useEffect, forseUpdate } from "react";
 import axios from "axios";
 import Input from "./Components/Input/Input";
 import Weatherelements from "./Components/WeatherElements/WeatherElements";
 import "./App.css";
+import { fetchWeatherData, addTodo } from "./store/weatherReducer/weatherReducer";
+import { useSelector, useDispatch } from "react-redux";
+import "./App.css";
 
 function App() {
   const [city, setCity] = useState("");
-  const [weatherItems, setWeatherItems] = useState([]);
-  const [weather, setWeather] = useState("");
+
+  const dispatch = useDispatch();
+  const weatherData = useSelector((state) => state.weatherData.weather);
+
+  console.log(weatherData, "weatherData");
 
   useEffect(() => {
     getData();
   }, []);
 
-  const addElement = async () => {
+  const addElement = () => {
     try {
-      await getData()
-        .then(() => weatherItems.find((element) => element.city === city))
+      dispatch(fetchWeatherData())
+        .then(() => weatherData.find((element) => element.city === city))
         .then((result) => {
           if (result === undefined) {
-            axios
-              .post(
-                "/api/weather/add",
-                { city: city },
-                {
-                  headers: {
-                    "Content-type": "application/json",
-                  },
-                }
-              )
-              .then(() => getData());
+            dispatch(addTodo(city));
           }
         });
       setCity("");
@@ -40,11 +35,7 @@ function App() {
   };
 
   const getData = async () => {
-    await axios.get("/api/weather/").then((result) => {
-      setWeather(result);
-      setCity("");
-      setWeatherItems((prevState) => [...result?.data]);
-    });
+    dispatch(fetchWeatherData());
   };
 
   const removeWeatherItem = async (id) => {
@@ -75,7 +66,7 @@ function App() {
         </button>
       </div>
 
-      <Weatherelements weatherItems={weatherItems} removeWeatherItem={removeWeatherItem} />
+      <Weatherelements weatherData={weatherData} removeWeatherItem={removeWeatherItem} />
     </div>
   );
 }
