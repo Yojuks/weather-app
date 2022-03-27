@@ -1,0 +1,24 @@
+.Title,
+.InputAndButton {
+  text-align: center;
+}
+
+.button {
+  padding: 5px;
+  border: 1px solid black;
+  border-radius: 5px;
+  height: 37px;
+  width: 50px;
+}
+
+body {
+  background: linear-gradient(#73b2bd, #a3d5de) no-repeat;
+  height: 100vh;
+  font-family: "Roboto", sans-serif;
+}
+
+.App {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 30px;
+}
