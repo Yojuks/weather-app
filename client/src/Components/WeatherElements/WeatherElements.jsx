@@ -1,12 +1,12 @@
 import React from "react";
-import { v1 } from "uuid";
 import WeatherItem from "../WeatherItem/WeatherItem";
 
-const Weatherelements = ({ weatherItems, removeWeatherItem }) => {
+const Weatherelements = ({ weatherData, removeWeatherItem }) => {
+  console.log({ weatherData });
   return (
     <>
-      {weatherItems &&
-        weatherItems.map((element) => {
+      {weatherData &&
+        weatherData.map((element) => {
           return (
             <WeatherItem
               key={element._id}
